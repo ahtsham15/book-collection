@@ -6,7 +6,6 @@ const verifyToken = async (req, res, next) => {
   try {
     const accessToken = req?.headers?.authorization?.split(" ")[1];
     if (accessToken) {
-        console.log("The secret token is: ",process.env.SECRET_TOKEN)
       const isVerified = jwt.verify(accessToken, process.env.SECRET_TOKEN);
       if (isVerified) {
         req.user = await User.findOne({ _id: isVerified.userId });
