@@ -33,4 +33,37 @@ const sendResetPasswordEmail = async (email, resetCode, userName) => {
   return await transporter.sendMail(mailOptions);
 };
 
-module.exports = { sendResetPasswordEmail };
+const sendPasswordConfirmationEmail = async (email, password, userName) => {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Your Author Account Credentials',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Welcome to Our Platform!</h2>
+        <p>Hello ${userName || 'Author'},</p>
+        <p>An author account has been created for you. Here are your login credentials:</p>
+        
+        <div style="background-color: #f4f4f4; padding: 20px; border-radius: 5px; margin: 20px 0;">
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Password:</strong> <span style="font-family: monospace; font-size: 16px; background-color: #e0e0e0; padding: 3px 8px; border-radius: 3px;">${password}</span></p>
+        </div>
+        
+        <div style="background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p style="margin: 0;"><strong>⚠️ Important:</strong> For security reasons, please change your password after your first login.</p>
+        </div>
+        
+        <p>You can log in at: <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/login">${process.env.FRONTEND_URL || 'http://localhost:3000'}/login</a></p>
+        
+        <p>If you have any questions, please contact support.</p>
+        
+        <hr style="border: 1px solid #eee; margin: 20px 0;">
+        <p style="color: #666; font-size: 12px;">This is an automated message, please do not reply.</p>
+      </div>
+    `
+  };
+
+  return await transporter.sendMail(mailOptions);
+};
+
+module.exports = { sendResetPasswordEmail, sendPasswordConfirmationEmail};
