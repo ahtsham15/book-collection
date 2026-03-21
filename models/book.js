@@ -18,6 +18,10 @@ const bookSchema = new mongoose.Schema({
     ref: 'Author',
     required: true
   },
+  genres: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Genre'
+  }],
   publicationDate: {
     type: String
   },
