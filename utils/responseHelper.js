@@ -4,7 +4,6 @@ exports.SuccessResponse = (ctx, status, data = "") => {
     data,
   });
 };
-
 exports.ErrorResponse = async (
   ctx,
   status,
@@ -14,8 +13,7 @@ exports.ErrorResponse = async (
   endPoint
 ) => {
   console.log({ status, message, model, error, endPoint });
-  if (endPoint)
-  ctx.status(status).json({
+  return ctx.status(status).json({
     success: false,
     message,
   });
