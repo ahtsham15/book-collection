@@ -22,6 +22,10 @@ const bookSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Genre'
   }],
+  publisher: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Publisher'
+  },
   publicationDate: {
     type: String
   },

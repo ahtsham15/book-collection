@@ -1,5 +1,6 @@
 const Author = require("../models/author");
 const { User } = require("../models/user");
+const Book = require("../models/book");
 const { generateRandomPassword } = require("../utils/commonFunction");
 const { sendPasswordConfirmationEmail } = require("../utils/emailHelper");
 const { SuccessResponse, ErrorResponse } = require("../utils/responseHelper");
@@ -65,17 +66,17 @@ const getAllAuthors = async (req, res) => {
     const authors = await Author.find().sort({ lastName: 1 });
     const authorsWithBookCount = await Promise.all(
       authors.map(async (author) => {
-        // const bookCount = await Book.countDocuments({ author: author._id});
+        const bookCount = await Book.countDocuments({ author: author._id});
         return {
           ...author.toObject(),
-        //   bookCount
+          bookCount
         };
       })
     );
     
     return SuccessResponse(res, 200, {
-    //   authors: authorsWithBookCount,
-        authors:authors,
+      authors: authorsWithBookCount,
+      authors:authors,
       totalAuthors: authorsWithBookCount.length
     });
   } catch (error) {
@@ -94,16 +95,14 @@ const getAuthorById = async (req, res) => {
     if (!author) {
       return ErrorResponse(res, 404, "Author not found", "authors", "Author not found", "/");
     }
-    
-    // Get books by this author (uncommented and ready to use)
-    // const books = await Book.find({ author: id, isActive: true })
-    //   .populate('genres', 'name')
-    //   .select('title ISBN publicationDate price coverImage averageRating');
+    const books = await Book.find({ author: id})
+      .populate('genres', 'name')
+      .select('title ISBN publicationDate price coverImage averageRating');
     
     return SuccessResponse(res, 200, {
       author,
-    //   books,
-    //   totalBooks: books.length
+      books,
+      totalBooks: books.length
     });
   } catch (error) {
     return ErrorResponse(res, 400, String(error), "authors", String(error), "/");
@@ -153,16 +152,14 @@ const deleteAuthor = async (req, res) => {
       return ErrorResponse(res, 403, "Unauthorized: Only admin users can update authors", "authors", "User is not admin", "/");
     }
     const { id } = req.params;
-    // Check if author has books
-    // const bookCount = await Book.countDocuments({ author: id, isActive: true });
-    // if (bookCount > 0) {
-    //   return ErrorResponse(res, 400, "Cannot delete author with existing books. Please reassign or delete books first.");
-    // }
+    const bookCount = await Book.countDocuments({ author: id});
+    if (bookCount > 0) {
+      return ErrorResponse(res, 400, "Cannot delete author with existing books. Please reassign or delete books first.");
+    }
     const author = await Author.findByIdAndDelete(id);
     if (!author) {
       return ErrorResponse(res, 404, "Author not found");
     }
-    
     return SuccessResponse(res, 200, {
       message: "Author deleted successfully"
     });
