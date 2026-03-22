@@ -14,9 +14,13 @@ const createBook = async (req, res) => {
       return ErrorResponse(res, 404, "Author not found");
     }
     const book = await Book.create(bookData);
+    const populatedBook = await Book.findById(book._id)
+      .populate('author', 'firstName lastName')
+      .populate('genres', 'name')
+      .populate('publisher', 'name');
     return SuccessResponse(res, 201, {
       message: "Book created successfully",
-      book: book
+      book: populatedBook
     });
   } catch (error) {
     return ErrorResponse(res, 400, String(error), "books", String(error), "/");
@@ -29,8 +33,10 @@ const getAllBooks = async (req, res) => {
       return ErrorResponse(res, 403, "Unauthorized to view books");
     }
     const books = await Book.find()
-      .populate('author', 'firstName lastName email')
-      .sort({ createdAt: -1 });
+      .populate('author', 'firstName lastName')
+      .populate('genres', 'name')
+      .populate('publisher', 'name')
+      .sort()
     return SuccessResponse(res, 200, {
       message: "Books retrieved successfully",
       books,
@@ -53,8 +59,10 @@ const getBookById = async (req, res) => {
     let filter = { _id: id };
     if (req.user.userType === 'author') {
     }
-    const book = await Book.findOne(filter)
+    const book = await Book.findOne({ _id: id})
       .populate('author', 'firstName lastName bio nationality photo')
+      .populate('genres', 'name description')
+      .populate('publisher', 'name address contactEmail website');
     
     if (!book) {
       return ErrorResponse(res, 404, "Book not found");
