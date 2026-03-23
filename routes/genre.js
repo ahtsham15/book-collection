@@ -3,7 +3,6 @@ const userAuth  = require("../middlewares/authUser");
 const { createGenre, getAllGenres, getGenreById, updateGenre, deleteGenre } = require("../controllers/genresController");
 const router = express.Router();
 
-// router.post("/genres", userAuth.verifyToken, createGenre);
 router.post("/genres", createGenre);
 router.get("/genres", getAllGenres);
 router.get("/genres/:id", getGenreById);
