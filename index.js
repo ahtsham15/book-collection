@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
+const cors = require('cors');
 const api = require('./routes/index');
 
 const PORT = 3000;
@@ -19,6 +20,13 @@ morgan.token('body', (req) => {
   return JSON.stringify(req.body);
 });
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning']
+}));
 
 // Middleware
 app.use(bodyParser.json({ limit: '20mb' }));
