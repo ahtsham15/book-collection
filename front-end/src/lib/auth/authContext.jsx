@@ -34,9 +34,14 @@ export function AuthProvider({ children }) {
 
   const login = (data) => {
     try {
-      const { access_token, user_id, ...rest } = data;
-      const userData = { user_id, ...rest };
-
+        // data = { success: true, data: { access_token, exp, message } }
+        if (!data?.success || !data.data?.access_token) {
+          throw new Error("Invalid login response.");
+        }
+        const { access_token, exp, message, ...rest } = data.data;
+        // In the current backend shape, we might not have user_id
+        const userData = { user: rest.user };
+   
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("user", JSON.stringify(userData));
 

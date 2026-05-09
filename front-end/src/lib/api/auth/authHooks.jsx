@@ -27,7 +27,7 @@ export const useLogin = () => {
       // Store token and user data
       login(data);
       // Redirect to dashboard or home page
-      navigate("/dashboard");
+      navigate("/home");
     },
     onError: (error) => {
       console.error("Login failed:", error.message);

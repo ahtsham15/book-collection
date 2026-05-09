@@ -1,5 +1,5 @@
 // Remove the duplicate API_BASE_URL if it has trailing slash issues
-export const API_BASE_URL = import.meta.env.VITE_PUBLIC_API_URL || 'http://localhost:3000';
+export const API_BASE_URL = (import.meta.env.VITE_PUBLIC_API_URL || 'http://localhost:3000').replace(/\/$/, '');
 
 export const apiClient = async (
   endpoint,
@@ -15,8 +15,16 @@ export const apiClient = async (
   };
 
   // Ensure endpoint starts with /api if it doesn't already
-  const normalizedEndpoint = endpoint.startsWith('/api') ? endpoint : `/api${endpoint}`;
+  let normalizedEndpoint = endpoint;
+  if (!normalizedEndpoint.startsWith('/api')) {
+    normalizedEndpoint = `/api${normalizedEndpoint}`;
+  }
+  
+  // Build URL safely without double slashes
   let apiUrl = `${API_BASE_URL}${normalizedEndpoint}`;
+  
+  // Log the URL for debugging
+  console.log('API Request URL:', apiUrl);
 
   const config = {
     method: method || (body ? "POST" : "GET"),
@@ -25,6 +33,7 @@ export const apiClient = async (
       ...headers,
     },
     mode: "cors",
+    credentials: "include", // Add this to include cookies
   };
 
   if (body) {
@@ -49,6 +58,8 @@ export const apiClient = async (
         errorData = { message: await response.text() };
       }
       
+      console.error('API Error Response:', errorData);
+      
       // Create a proper error object
       const error = new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status}`);
       error.response = errorData;
@@ -64,6 +75,6 @@ export const apiClient = async (
     return null;
   } catch (error) {
     console.error("API Request Failed:", error);
-    throw error; // Don't return {error: true} for network errors, throw instead
+    throw error;
   }
 };
