@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 
 export function AsinOverviewChart() {
-  // Updated chart data to match the design
   const chartData = [
     { date: "Oct 1", value: 4.5 },
     { date: "Oct 2", value: 4.8 },
@@ -32,7 +31,6 @@ export function AsinOverviewChart() {
       <CardContent className="pt-0 pb-6">
         <div className="h-80 relative">
           <svg className="w-full h-full" viewBox="0 0 800 320">
-            {/* Y-axis grid lines and labels */}
             {[0, 2, 4, 6, 8, 10].map((value) => (
               <g key={value}>
                 <text
@@ -54,8 +52,6 @@ export function AsinOverviewChart() {
                 />
               </g>
             ))}
-
-            {/* X-axis labels */}
             {chartData.map((point, index) => (
               <text
                 key={point.date}
@@ -67,8 +63,6 @@ export function AsinOverviewChart() {
                 {point.date}
               </text>
             ))}
-
-            {/* Smooth curve path */}
             <path
               d={`M 50,${280 - chartData[0].value * 25} 
                   C 83,${280 - chartData[0].value * 25} 133,${
