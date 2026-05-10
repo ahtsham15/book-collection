@@ -16,6 +16,7 @@ const createAuthor = async (req, res) => {
     if (existingAuthor) {
       return ErrorResponse(res, 409, "Email already exists. Please use a different email address", "authors", "Duplicate email", "/");
     }
+    console.log("The data of the body is: ",req.body)
     const existingUser = await User.findOne({ email: req.body.email.toLowerCase() });
     if (existingUser) {
       return ErrorResponse(res, 409, "Email already exists in user database", "authors", "Duplicate email in users", "/");
