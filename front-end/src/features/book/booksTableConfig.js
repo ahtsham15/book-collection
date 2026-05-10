@@ -27,15 +27,6 @@ export const BOOKS_COLUMNS = [
         render: (value) => value || "N/A",
       },
       {
-        key: "genreNames",
-        label: "GENRES",
-        width: "150px",
-        filterable: true,
-        filterType: "select",
-        filterOptions: [],
-        render: (value) => value || "N/A",
-      },
-      {
         key: "publisherName",
         label: "PUBLISHER",
         width: "160px",
@@ -103,22 +94,6 @@ export const BOOKS_COLUMNS = [
       width: "80px",
       type: "number",
       filterable: false,
-    },
-    {
-      key: "status",
-      label: "STATUS",
-      width: "80px",
-      type: "badge",
-      render: (value) => {
-        if (!value) return "N/A";
-        return value;
-      },
-      badgeClassName: (value) => {
-        if (value === "Available") return "bg-green-100 text-green-800";
-        if (value === "Low Stock") return "bg-yellow-100 text-yellow-800";
-        if (value === "Out of Stock") return "bg-red-100 text-red-800";
-        return "bg-gray-100 text-gray-800";
-      },
     },
   ];
   
