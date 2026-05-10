@@ -6,6 +6,7 @@ import { AuthProvider } from "./lib/auth/authContext";
 import LoginPage from "./router/login/page";
 import { HomePage } from "./router/home/page";
 import { BooksPage } from "./router/book/page";
+import { AuthorPage } from "./router/author/page";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/books" element={<BooksPage />} />
+            <Route path="/authors" element={<AuthorPage />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
