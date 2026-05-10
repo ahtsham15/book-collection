@@ -6,9 +6,7 @@ import { useDashboardStats } from "@/lib/api/dashboard/dashboardHooks";
 export function DashboardContent() {
   const { data, isLoading, error } = useDashboardStats();
   
-  console.log("The data:",data)
 
-  // Extract data from API response
   const dashboardData = data?.data || {
     totalBooks: 0,
     totalAuthors: 0,
@@ -77,7 +75,6 @@ export function DashboardContent() {
         ))}
       </div>
       
-      {/* Add the chart component below metrics */}
       <div className="mt-8">
         <AsinOverviewChart />
       </div>
