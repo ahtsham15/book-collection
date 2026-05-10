@@ -13,7 +13,9 @@ import {
     FileText,
     Settings,
     Ruler,
-    FlagIcon,
+    Flag, // Changed from FlagIcon to Flag
+    BookOpen,
+    Building2, // Optional: better icon for publishers
   } from "lucide-react";
   import { useLocation, Link } from "react-router-dom";
   
@@ -25,18 +27,18 @@ import {
     },
     {
       title: "Books",
-      icon: Tag,
+      icon: BookOpen, // Changed from Tag to BookOpen for better representation
       url: "/books",
     },
     {
       title: "Authors",
-      icon: Ruler,
+      icon: Users, // Changed from Ruler to Users for better representation
       url: "/authors",
     },
     {
-      title: "Publish",
-      icon: FlagIcon,
-      url: "/publish",
+      title: "Publishers", // Changed from "Publish" to "Publishers" for clarity
+      icon: Building2, // Or use Flag if you prefer
+      url: "/publishers", // Changed from "/publish" to match the route in App.jsx
     },
     // {
     //   title: "Settings",
@@ -86,4 +88,3 @@ import {
       </Sidebar>
     );
   }
-  
