@@ -24,14 +24,11 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      // Store token and user data
       login(data);
-      // Redirect to dashboard or home page
       navigate("/home");
     },
     onError: (error) => {
       console.error("Login failed:", error.message);
-      // You can show a toast or alert here
       alert(error.message || "Login failed. Please check your credentials.");
     },
   });
