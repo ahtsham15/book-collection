@@ -27,6 +27,7 @@ const loginUser = async (req, res) => {
       message: "Login Successfully",
       access_token,
       user:user._id,
+      userType:user.userType,
       exp: 86400000,
     });
   } catch (error) {

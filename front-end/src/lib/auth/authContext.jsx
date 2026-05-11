@@ -34,19 +34,31 @@ export function AuthProvider({ children }) {
 
   const login = (data) => {
     try {
-        // data = { success: true, data: { access_token, exp, message } }
-        if (!data?.success || !data.data?.access_token) {
-          throw new Error("Invalid login response.");
-        }
-        const { access_token, exp, message, ...rest } = data.data;
-        // In the current backend shape, we might not have user_id
-        const userData = { user: rest.user };
+      if (!data?.success || !data.data?.access_token) {
+        throw new Error("Invalid login response.");
+      }
+      
+      const { 
+        access_token, 
+        exp, 
+        message, 
+        user: userId, 
+        userType,
+        ...rest 
+      } = data.data;
+      
+      const userData = { 
+        userId: userId,
+        userType: userType,
+        ...rest 
+      };
    
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("user", JSON.stringify(userData));
 
       setToken(access_token);
       setUser(userData);
+      return userData;
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
@@ -84,6 +96,11 @@ export function AuthProvider({ children }) {
     }
     console.error("API Error handled:", error);
   };
+  const hasRole = (roles) => {
+    if (!user) return false;
+    if (typeof roles === "string") return user.userType === roles;
+    return roles.includes(user.userType);
+  };
 
   return (
     <AuthContext.Provider
@@ -95,6 +112,8 @@ export function AuthProvider({ children }) {
         updateUser,
         isLoading,
         handleApiError,
+        hasRole,
+        userType: user?.userType,
       }}
     >
       {children}
