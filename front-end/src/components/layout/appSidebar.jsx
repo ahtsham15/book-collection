@@ -9,46 +9,48 @@ import {
   import {
     Package,
     Users,
-    Tag,
-    FileText,
-    Settings,
-    Ruler,
-    Flag,
     BookOpen,
     Building2,
   } from "lucide-react";
   import { useLocation, Link } from "react-router-dom";
-  
-  const menuItems = [
+  import { useAuth } from "@/lib/auth/authContext";
+  const allMenuItems = [
     {
       title: "Dashboard",
       icon: Package,
       url: "/home",
+      allowedUserTypes: ["admin"],
     },
     {
       title: "Books",
       icon: BookOpen,
       url: "/books",
+      allowedUserTypes: ["admin", "author", "normalUser"],
     },
     {
       title: "Authors",
       icon: Users,
       url: "/authors",
+      allowedUserTypes: ["admin"],
     },
     {
       title: "Publishers",
       icon: Building2,
       url: "/publishers",
+      allowedUserTypes: ["admin"],
     },
-    // {
-    //   title: "Settings",
-    //   icon: Settings,
-    //   url: "/settings",
-    // },
   ];
   
   export function AppSidebar() {
     const location = useLocation();
+    const { user, userType } = useAuth();
+    const menuItems = allMenuItems.filter((item) => {
+      if (!user || !userType) return false;
+      return item.allowedUserTypes.includes(userType);
+    });
+    if (menuItems.length === 0) {
+      return null;
+    }
   
     return (
       <Sidebar className="border-r border-gray-200 h-screen flex-shrink-0">
@@ -67,13 +69,13 @@ import {
                     asChild
                     isActive={isActive}
                     className={`
-                        flex items-center gap-3 px-6 py-3 text-sm font-medium transition-colors
-                        ${
-                          isActive
-                            ? "text-orange-500 bg-orange-50"
-                            : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                        }
-                      `}
+                      flex items-center gap-3 px-6 py-3 text-sm font-medium transition-colors
+                      ${
+                        isActive
+                          ? "text-orange-500 bg-orange-50"
+                          : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      }
+                    `}
                   >
                     <Link to={item.url}>
                       <item.icon className="h-5 w-5" />
