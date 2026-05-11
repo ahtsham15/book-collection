@@ -3,6 +3,9 @@ const bcrypt = require('bcrypt');
 const { SuccessResponse, ErrorResponse } = require("../utils/responseHelper");
 const { generateToken } = require("../utils/commonFunction");
 const { sendResetPasswordEmail } = require("../utils/emailHelper");
+const Book = require("../models/book");
+const Author = require("../models/author");
+const Publisher = require("../models/publisher");
 
 const loginUser = async (req, res) => {
   try {
@@ -23,6 +26,7 @@ const loginUser = async (req, res) => {
     SuccessResponse(res, 200, {
       message: "Login Successfully",
       access_token,
+      user:user._id,
       exp: 86400000,
     });
   } catch (error) {
@@ -191,6 +195,35 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const getStats = async (req, res) => {
+  try {
+    if (req.user.userType !== 'admin') {
+      return ErrorResponse(res, 403, "Unauthorized: Only admin users can create authors", "authors", "User is not admin", "/");
+    }
+    const [totalAuthors, totalBooks, totalPublishers] = await Promise.all([
+      Author.countDocuments({}),
+      Book.countDocuments({}),
+      Publisher.countDocuments({}),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        totalAuthors,
+        totalBooks,
+        totalPublishers,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to fetch statistics",
+    });
+  }
+};
+
+
 module.exports = {
     signupUser,
     loginUser,
@@ -199,4 +232,5 @@ module.exports = {
     requestPasswordReset,
     verifyResetCode,
     resetPassword,
+    getStats,
 }
