@@ -39,6 +39,6 @@ export const PUBLISHERS_COLUMNS = [
       key: "createdAt",
       label: "Created Date",
       sortable: true,
-      type: "date", // This will use your CustomTable's date formatter
+      type: "date",
     },
   ];
