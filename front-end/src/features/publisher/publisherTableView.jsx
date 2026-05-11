@@ -41,10 +41,8 @@ export const PublishersTableView = () => {
     }
   };
 
-  // Transform data if needed to ensure consistent format
   const transformedData = publishersData?.map(publisher => ({
     ...publisher,
-    // Ensure these fields exist
     name: publisher.name || "N/A",
     contactEmail: publisher.contactEmail || "-",
     phone: publisher.phone || "-",
